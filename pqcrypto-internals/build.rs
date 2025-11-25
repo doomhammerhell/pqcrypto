@@ -30,10 +30,14 @@ fn main() {
         build.flag(format!("--sysroot={wasi_sdk_path}").as_str());
     }
 
-    build
-        .include(&includepath)
-        .files(common_files)
-        .compile("pqclean_common");
+    build.include(&includepath);
+
+    if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE") {
+        build.include(libc);
+        println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
+    }
+
+    build.files(common_files).compile("pqclean_common");
     println!("cargo:rustc-link-lib=pqclean_common");
 
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap_or_default();

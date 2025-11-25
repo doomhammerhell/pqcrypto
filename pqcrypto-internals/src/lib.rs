@@ -2,6 +2,14 @@
 
 use core::slice;
 
+#[cfg(target_arch = "wasm32")]
+type size_t = usize;
+#[cfg(target_arch = "wasm32")]
+use core::ffi::c_int;
+
+#[cfg(not(target_arch = "wasm32"))]
+use libc::{c_int, size_t};
+
 /// Get random bytes; exposed for PQClean implementations.
 ///
 /// # Safety
@@ -16,7 +24,7 @@ use core::slice;
 /// }
 /// ```
 #[no_mangle]
-pub unsafe extern "C" fn PQCRYPTO_RUST_randombytes(buf: *mut u8, len: libc::size_t) -> libc::c_int {
+pub unsafe extern "C" fn PQCRYPTO_RUST_randombytes(buf: *mut u8, len: size_t) -> c_int {
     let buf = slice::from_raw_parts_mut(buf, len);
     getrandom::fill(buf).expect("RNG Failed");
     0

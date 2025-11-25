@@ -9,6 +9,11 @@
 //!  * falcon-padded-1024
 // This file has been generated from PQClean.
 // Find the templates in pqcrypto-template
+
+#[cfg(target_arch = "wasm32")]
+use core::ffi::c_int;
+
+#[cfg(not(target_arch = "wasm32"))]
 use libc::c_int;
 
 // ensures we link correctly
