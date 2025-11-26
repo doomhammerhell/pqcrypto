@@ -2,13 +2,9 @@
 
 use core::slice;
 
-#[cfg(target_arch = "wasm32")]
+#[allow(nonstandard_style)]
 type size_t = usize;
-#[cfg(target_arch = "wasm32")]
 use core::ffi::c_int;
-
-#[cfg(not(target_arch = "wasm32"))]
-use libc::{c_int, size_t};
 
 /// Get random bytes; exposed for PQClean implementations.
 ///

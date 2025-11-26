@@ -14,9 +14,7 @@ macro_rules! build_clean {
             .iter()
             .collect();
 
-        let target = env::var("TARGET").unwrap_or_default();
         let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
-
         if target_os == "wasi" {
             let wasi_sdk_path =
                 &std::env::var("WASI_SDK_DIR").expect("missing environment variable: WASI_SDK_DIR");
@@ -29,14 +27,9 @@ macro_rules! build_clean {
             .include(internals_include_path)
             .include(&common_dir)
             .include(target_dir);
-
-        // Add OpenBSD libc for WASM
-        if target.contains("wasm32") {
-            if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE")
-            {
-                builder.include(libc);
-                println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
-            }
+        if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE") {
+            builder.include(libc);
+            println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
         }
 
         builder.files(
@@ -58,9 +51,7 @@ macro_rules! build_avx2 {
             .iter()
             .collect();
 
-        let target = env::var("TARGET").unwrap_or_default();
         let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
-
         if target_os == "wasi" {
             let wasi_sdk_path =
                 &std::env::var("WASI_SDK_DIR").expect("missing environment variable: WASI_SDK_DIR");
@@ -85,14 +76,9 @@ macro_rules! build_avx2 {
             .include(internals_include_path)
             .include(&common_dir)
             .include(target_dir);
-
-        // Add OpenBSD libc for WASM
-        if target.contains("wasm32") {
-            if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE")
-            {
-                builder.include(libc);
-                println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
-            }
+        if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE") {
+            builder.include(libc);
+            println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
         }
 
         builder.files(
@@ -114,9 +100,7 @@ macro_rules! build_aarch64 {
             .iter()
             .collect();
 
-        let target = env::var("TARGET").unwrap_or_default();
         let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
-
         if target_os == "wasi" {
             let wasi_sdk_path =
                 &std::env::var("WASI_SDK_DIR").expect("missing environment variable: WASI_SDK_DIR");
@@ -130,14 +114,9 @@ macro_rules! build_aarch64 {
             .include(internals_include_path)
             .include(&common_dir)
             .include(target_dir);
-
-        // Add OpenBSD libc for WASM
-        if target.contains("wasm32") {
-            if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE")
-            {
-                builder.include(libc);
-                println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
-            }
+        if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE") {
+            builder.include(libc);
+            println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
         }
 
         builder.files(

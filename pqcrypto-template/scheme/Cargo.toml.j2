@@ -14,12 +14,14 @@ categories = ["cryptography", "no-std"]
 [dependencies]
 pqcrypto-internals = { path = "../pqcrypto-internals", version = "0.2.6" }
 pqcrypto-traits = { path = "../pqcrypto-traits", version = "{{ traits_version }}", default-features = false }
-libc = "0.2.0"
 serde = { version = "1.0", features = ["derive"], optional = true }
 serde-big-array = { version = "0.5.1", optional = true }
 {% if supports_context %}
 paste = "1.0"
 {% endif %}
+
+[target.wasm32-unknown-unknown.dependencies]
+wasm32-unknown-unknown-openbsd-libc = "0.2"
 
 [features]
 default = [{% if 'avx2' in implementations or 'avx' in implementations %}"avx2", {% endif %}{% if 'aesni' in implementations %}"aes", {% endif %}{% if 'aarch64' in implementations %}"neon", {% endif %}"std"]
@@ -37,6 +39,7 @@ serialization = ["serde", "serde-big-array"]
 {% if insecure %}
 cryptographically-insecure = []
 {% endif %}
+getrandom_wasm_js = ["pqcrypto-internals/getrandom_wasm_js"]
 
 [dev-dependencies]
 {% if type == "sign" %}

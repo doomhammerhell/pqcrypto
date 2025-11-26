@@ -26,12 +26,17 @@ macro_rules! build_clean {
         builder
             .include(internals_include_path)
             .include(&common_dir)
-            .include(target_dir)
-            .files(
-                scheme_files
-                    .into_iter()
-                    .map(|p| p.unwrap().to_string_lossy().into_owned()),
-            );
+            .include(target_dir);
+        if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE") {
+            builder.include(libc);
+            println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
+        }
+
+        builder.files(
+            scheme_files
+                .into_iter()
+                .map(|p| p.unwrap().to_string_lossy().into_owned()),
+        );
         builder.compile(format!("{}_clean", $variant).as_str());
     };
 }

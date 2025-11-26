@@ -24,7 +24,7 @@ pqcrypto-sphincsplus = { path = "../pqcrypto-sphincsplus", version = "0.7.2", op
 default = ["pqcrypto-mlkem","pqcrypto-classicmceliece","pqcrypto-hqc","pqcrypto-mldsa","pqcrypto-falcon","pqcrypto-sphincsplus",]
 cryptographically-insecure = []
 serialization = ["pqcrypto-mlkem/serialization","pqcrypto-classicmceliece/serialization","pqcrypto-hqc/serialization","pqcrypto-mldsa/serialization","pqcrypto-falcon/serialization","pqcrypto-sphincsplus/serialization",]
-getrandom_wasm_jd = ["pqcrypto-falcon?/getrandom_wasm_js"]
+getrandom_wasm_jd = ["pqcrypto-mlkem?/getrandom_wasm_js","pqcrypto-classicmceliece?/getrandom_wasm_js","pqcrypto-hqc?/getrandom_wasm_js","pqcrypto-mldsa?/getrandom_wasm_js","pqcrypto-falcon?/getrandom_wasm_js","pqcrypto-sphincsplus?/getrandom_wasm_js",]
 
 [badges]
 travis-ci = { repository = "rustpq/pqcrypto", branch = "master" }

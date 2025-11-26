@@ -62,8 +62,15 @@ macro_rules! build_{{ implementation }} {
         builder
             .include(internals_include_path)
             .include(&common_dir)
-            .include(target_dir)
-            .files(
+            .include(target_dir);
+        {% if name != 'classicmceliece2' %}
+        if let Some(libc) = std::env::var_os("DEP_WASM32_UNKNOWN_UNKNOWN_OPENBSD_LIBC_INCLUDE") {
+            builder.include(libc);
+            println!("cargo::rustc-link-lib=wasm32-unknown-unknown-openbsd-libc");
+        }
+        {% endif %}
+
+        builder.files(
                 scheme_files
                     .into_iter()
                     .map(|p| p.unwrap().to_string_lossy().into_owned()),

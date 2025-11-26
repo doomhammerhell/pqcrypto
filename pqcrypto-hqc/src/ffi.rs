@@ -8,7 +8,7 @@
 //!  * hqc-256
 // This file has been generated from PQClean.
 // Find the templates in pqcrypto-template
-use libc::c_int;
+use core::ffi::c_int;
 
 // ensures we link correctly
 #[allow(unused_imports)]

@@ -14,11 +14,10 @@ categories = ["cryptography", "no-std"]
 [dependencies]
 pqcrypto-internals = { path = "../pqcrypto-internals", version = "0.2.6" }
 pqcrypto-traits = { path = "../pqcrypto-traits", version = "0.3.5", default-features = false }
-libc = "0.2.0"
 serde = { version = "1.0", features = ["derive"], optional = true }
 serde-big-array = { version = "0.5.1", optional = true }
 
-[target.'cfg(target_arch = "wasm32")'.dependencies]
+[target.wasm32-unknown-unknown.dependencies]
 wasm32-unknown-unknown-openbsd-libc = "0.2"
 
 [features]
