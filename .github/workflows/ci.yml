@@ -128,4 +128,55 @@ jobs:
   #         cargo wasi build --features cryptographically-insecure
   #         #cargo wasi test -- --nocapture
 
+  generated-code-is-up-to-date:
+    runs-on: ubuntu-latest
+
+    env:
+      PIPENV_VENV_IN_PROJECT: 1
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Restore Pipenv virtualenv cache
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: pipenv-venv-${{ runner.os }}-${{ hashFiles('Pipfile.lock') }}
+          restore-keys: |
+            pipenv-venv-${{ runner.os }}-
+
+      - name: Install Pipenv
+        run: pip install --upgrade pipenv
+
+      - name: Install dependencies (Pipfile.lock)
+        run: pipenv sync --dev
+
+      - name: Regenerate all crates
+        run: pipenv run python generate-implementations.py
+
+      - name: Check for uncommitted changes
+        run: |
+          if ! git diff --exit-code --quiet; then
+            echo "❌ ERROR: Generated files are out of date!"
+            git diff --name-only
+            git diff --color
+            exit 1
+          fi
+
+          if ! git diff --cached --exit-code --quiet; then
+            echo "❌ ERROR: Staged changes detected!"
+            git diff --cached --name-only
+            git diff --cached --color
+            exit 1
+          fi
+
+          echo "✅ All generated files are up-to-date!"
 #  vim: set ft=yaml ts=2 sw=2 tw=0 et :
