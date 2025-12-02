@@ -85,6 +85,33 @@ jobs:
           cargo install cargo-ndk
           cargo ndk -t aarch64-linux-android build
 
+  wasm32-unknown-unknown:
+    name: wasm32-unknown-unknown
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [ stable, beta, nightly ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install ${{ matrix.rust }} --profile minimal --component clippy
+          rustup default ${{ matrix.rust }}
+          rustup target add wasm32-unknown-unknown
+
+      - name: Check workspace (all crates except classicmceliece & umbrella)
+        run: |
+          cargo check --workspace --target wasm32-unknown-unknown --features getrandom_wasm_js \
+            --exclude pqcrypto-classicmceliece \
+            --exclude pqcrypto
+
+      - name: Check umbrella crate (explicitly enable only supported wasm crates)
+        run: |
+          cargo check --target wasm32-unknown-unknown \
+            -p pqcrypto --no-default-features -F pqcrypto-mlkem,pqcrypto-hqc,pqcrypto-mldsa,pqcrypto-falcon,pqcrypto-sphincsplus,serialization,getrandom_wasm_js
   # wasi:
   #   name: wasi
   #   runs-on: ubuntu-latest
